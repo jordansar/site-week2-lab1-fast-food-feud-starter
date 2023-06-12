@@ -1,6 +1,11 @@
 // IMPORT ANY NEEDED COMPONENTS HERE
 import { Dataset } from "./data/dataset"
 import "./App.css"
+import Chip from "./components/Chip/Chip"
+import { useState } from "react"
+import Header from "./components/Header/Header"
+import Instructions from "./components/Instructions/Instructions"
+
 
 // don't move this!
 export const appInfo = {
@@ -20,6 +25,24 @@ export const appInfo = {
 
 export function App() {
   const { data, categories, restaurants } = Dataset.createDataSet()
+  const [clickedCategory, setClickedCategory] = useState(null)
+  const [clickedRestaurant, setClickedRestaurant] = useState(null)
+  const [clickedItem, setClickedItem] = useState(null)
+  const [isActive, setIsActive] = useState(true)
+
+
+
+  const clickCategory = (category) => {
+    setClickedItem(null)
+    setClickedCategory(category)
+  }
+  function changeStuff() {
+    setIsActive(!isActive)
+  }
+
+
+
+
 
   return (
     <main className="App">
@@ -27,21 +50,46 @@ export function App() {
       <div className="CategoriesColumn col">
         <div className="categories options">
           <h2 className="title">Categories</h2>
-          {/* YOUR CODE HERE */}
+          {/* YOUR CODE HERE */
+          
+          categories.map((category ) =>  {
+            // if (category === "Burgers") 
+              return <Chip 
+              key={category} 
+              label = {category} 
+              onClick={() => clickedCategory (category)} 
+              isActive = {clickCategory == category} />
+             
+              
+                // return <Chip key={category} label = {category} isActive = {false} />
+              
+            }
+          
+         
+           )}
         </div>
       </div>
 
       {/* MAIN COLUMN */}
       <div className="container">
-        {/* HEADER GOES HERE */}
+        {/* HEADER GOES HERE */ Header(appInfo)}
 
         {/* RESTAURANTS ROW */}
         <div className="RestaurantsRow">
           <h2 className="title">Restaurants</h2>
-          <div className="restaurants options">{/* YOUR CODE HERE */}</div>
-        </div>
+          <div className="restaurants options">
+            {restaurants.map(( restaurants) => 
+            {
+                return <Chip key ={restaurants} label= {restaurants} isActive = {false}/>
 
-        {/* INSTRUCTIONS GO HERE */}
+            })}
+          </div>
+        </div>
+      
+
+        {/* INSTRUCTIONS GO HERE */ 
+        <Instructions instructions = {appInfo.instructions.start}/>
+        }
 
         {/* MENU DISPLAY */}
         <div className="MenuDisplay display">
