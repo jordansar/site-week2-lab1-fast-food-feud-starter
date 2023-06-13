@@ -5,7 +5,7 @@ import Chip from "./components/Chip/Chip"
 import { useState } from "react"
 import Header from "./components/Header/Header"
 import Instructions from "./components/Instructions/Instructions"
-
+import NutritionalLabel from "./components/NutritionalLabel/NutritionalLabel"
 
 // don't move this!
 export const appInfo = {
@@ -28,7 +28,7 @@ export function App() {
   const [clickedCategory, setClickedCategory] = useState(null)
   const [clickedRestaurant, setClickedRestaurant] = useState(null)
   const [clickedItem, setClickedItem] = useState(null)
-  const [isActive, setIsActive] = useState(true)
+  const [isActive, setIsActive] = useState(false)
 
 
 
@@ -36,11 +36,21 @@ export function App() {
     setClickedItem(null)
     setClickedCategory(category)
   }
-  function changeStuff() {
-    setIsActive(!isActive)
+
+  const clickRestaurant = (restaurants) => 
+  {
+    setClickedRestaurant(restaurants)
+    setClickedItem(null)
   }
 
 
+  // function changeStuff() {
+  //   setIsActive(!isActive)
+  // }
+
+  const currentMenuItems = data.filter((item) => {
+    return item.food_category === clickedCategory && item.food_category === clickedRestaurant
+  })
 
 
 
@@ -55,14 +65,8 @@ export function App() {
           categories.map((category ) =>  {
             // if (category === "Burgers") 
               return <Chip 
-              key={category} 
-              label = {category} 
-              onClick={() => clickedCategory (category)} 
-              isActive = {clickCategory == category} />
-             
-              
+              key={category} label = {category} onClick={() => clickCategory (category)} isActive = {clickedCategory === category} />
                 // return <Chip key={category} label = {category} isActive = {false} />
-              
             }
           
          
@@ -80,7 +84,7 @@ export function App() {
           <div className="restaurants options">
             {restaurants.map(( restaurants) => 
             {
-                return <Chip key ={restaurants} label= {restaurants} isActive = {false}/>
+                return <Chip key ={restaurants} label= {restaurants} onClick={() => clickRestaurant(restaurants)} isActive = {clickedRestaurant === restaurants}/>
 
             })}
           </div>
@@ -95,11 +99,18 @@ export function App() {
         <div className="MenuDisplay display">
           <div className="MenuItemButtons menu-items">
             <h2 className="title">Menu Items</h2>
-            {/* YOUR CODE HERE */}
+            { currentMenuItems.map((item, i) => {
+              return <Chip key={`${item.item_name} - ${i}`} 
+              label={item.item_name} 
+              onClick={() => setClickedItem(item)} 
+              isActive = {clickedItem && clickedItem.item_name === item.item_name}/>
+            })}
           </div>
 
           {/* NUTRITION FACTS */}
-          <div className="NutritionFacts nutrition-facts">{/* YOUR CODE HERE */}</div>
+          <div className="NutritionFacts nutrition-facts">{
+            clickedItem ? <NutritionalLabel item= {clickedItem}/> : null
+          }</div>
         </div>
 
         <div className="data-sources">
